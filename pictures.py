@@ -20,11 +20,13 @@ def get_pic_GPS(pic_dir):
     md5_dict = {}
     imagename = ['PNG', 'JPG', 'JEPG', 'GIF']
     items = os.listdir(pic_dir)
+    i = 0
     for item in items:
+        i += 1
         path = os.path.join(pic_dir, item)
         if os.path.isdir(path):
             get_pic_GPS(path)
-        elif any(path.upper().endswith(i) for i in imagename):
+        else:
             if args.delete_duplicated == True:
                 md5result = md5(path)
                 if md5result in md5_dict.keys():
@@ -35,7 +37,7 @@ def get_pic_GPS(pic_dir):
                     md5_dict[md5result] = path
             if args.remane == True:
                 date,city = imageread(path)
-                print("city: %s date: %s"%(city,date))
+                #print("city: %s date: %s"%(city,date))
                 if args.create_folder == True:
                     new_folder = city + '_' + date.split('-')[0]
                     if args.folder.endswith('/'):
@@ -47,15 +49,15 @@ def get_pic_GPS(pic_dir):
             else:
                 new_path = os.path.dirname(path)
             basename = os.path.basename(path)
+            basename = re.sub(r'.*Earth','',basename)
             match = re.search(r'(\d+\_\d+\_\d+_\d+_\d+_)',basename)
             if match:
-                new_filename = basename.replace(match.group(1),'_'.join(match.group(1).split("_")[:2]) + '_' + city + '_')
+                new_filename = basename.replace(match.group(1),'_'.join(match.group(1).split("_")[:3]) + '_' + city + '_')
             else:
-                new_filename = date + "_" + city + basename
+                new_filename = date + "_" + city + '_'+ basename
                         
-            os.rename(path,new_path + '/' + new_filename)    
-
-
+            os.rename(path,new_path + '/' + new_filename)
+            print('file: ' + str(i) + ' old name: ' + path + ' New name: ' + new_path + '/' + new_filename)    
 
 def convert_to_decimal(*gps):
     if '/' in gps[0]:
@@ -90,6 +92,9 @@ def convert_to_decimal(*gps):
         return str(decimal_gps)
 
 def imageread(path):
+    imagename = ['PNG', 'JPG', 'JEPG', 'GIF']
+    if not any(path.upper().endswith(i) for i in imagename):
+        return str(datetime.datetime.fromtimestamp(os.path.getmtime(path))).split(' ')[0].replace(':','-'),'Earth'
     print(path)
     f = open(path, 'rb')
     GPS = {}
@@ -159,7 +164,7 @@ def imageread(path):
     else:
         city = 'Earth'
     if not "DateTime" in GPS.keys():
-        GPS["DateTime"] = str(datetime.datetime.fromtimestamp(os.path.getctime(path)))
+        GPS["DateTime"] = str(datetime.datetime.fromtimestamp(os.path.getmtime(path)))
     if city == '':
         city = 'Earth'
     return GPS["DateTime"].split(' ')[0].replace(':','-'),city
