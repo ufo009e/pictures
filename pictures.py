@@ -39,7 +39,7 @@ def get_pic_GPS(pic_dir):
                 date,city = imageread(path)
                 #print("city: %s date: %s"%(city,date))
                 if args.create_folder == True:
-                    new_folder = city + '_' + date.split('-')[0]
+                    new_folder = date.split('-')[0]  + '_' + city
                     if args.folder.endswith('/'):
                         new_path = args.folder + new_folder
                     else:
