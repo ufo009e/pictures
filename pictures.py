@@ -49,7 +49,7 @@ def get_pic_GPS(pic_dir):
             else:
                 new_path = os.path.dirname(path)
             basename = os.path.basename(path)
-            basename = re.sub(r'.*Earth','',basename)
+            basename = re.sub(r'.*Earth','',basename).strip('_')
             match = re.search(r'(\d+\_\d+\_\d+_\d+_\d+_)',basename)
             if match:
                 new_filename = basename.replace(match.group(1),'_'.join(match.group(1).split("_")[:3]) + '_' + city + '_')
