@@ -49,7 +49,7 @@ def get_pic_GPS(pic_dir):
             basename = os.path.basename(path)
             match = re.search(r'(\d+\_\d+\_\d+_\d+_\d+_)',basename)
             if match:
-                new_filename = basename.replace(match.group(1),'_'.join(match.group(1).split("_")[0-2]) + '_' + city + '_')
+                new_filename = basename.replace(match.group(1),'_'.join(match.group(1).split("_")[:2]) + '_' + city + '_')
             else:
                 new_filename = date + "_" + city + basename
                         
@@ -160,6 +160,8 @@ def imageread(path):
         city = 'Earth'
     if not "DateTime" in GPS.keys():
         GPS["DateTime"] = str(datetime.datetime.fromtimestamp(os.path.getctime(path)))
+    if city == '':
+        city = 'Earth'
     return GPS["DateTime"].split(' ')[0].replace(':','-'),city
 
 
