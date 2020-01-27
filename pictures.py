@@ -1,9 +1,8 @@
-
 import os
 import exifread
 import re
 import sys
-import requests
+#import requests
 import json
 from rgeocoder import ReverseGeocoder
 import argparse
@@ -48,9 +47,9 @@ def get_pic_GPS(pic_dir):
             else:
                 new_path = os.path.dirname(path)
             basename = os.path.basename(path)
-            match = re.search(r'(\d+\-\d+\-\d+)',basename)
+            match = re.search(r'(\d+\_\d+\_\d+_\d+_\d+_)',basename)
             if match:
-                new_filename = basename.replace(match.group(1),match.group(1) + '_' + city)
+                new_filename = basename.replace(match.group(1),'_'.join(match.group(1).split("_")[0-2]) + '_' + city + '_')
             else:
                 new_filename = date + "_" + city + basename
                         
