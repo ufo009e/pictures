@@ -53,18 +53,16 @@ def get_pic_GPS(pic_dir):
                 new_path = os.path.dirname(path)
             basename = os.path.basename(path)
             basename = re.sub(r'.*Earth','',basename).strip('_')
-            basename = re.sub(r'\d+\-\d+\-\d+\-','',basename).strip('_')
-            match = re.search(r'(\d+\_\d+\_\d+_\d+_\d+_)',basename)
+            match = re.search(r'(^\d+\_\d+\_\d+_\d+_\d+_|^\d+\-\d+\-\d+)',basename)
             if match:
-                if city != '':
-                    new_filename = basename.replace(match.group(1),'_'.join(match.group(1).split("_")[:3]) + '_' + city + '_')
-                else:
-                    new_filename = basename.replace(match.group(1),'_'.join(match.group(1).split("_")[:3]) + '_')
+                date = '_'.join(match.group(1).split("_")[:3])
+            #basename = re.sub(r'(\d+\-\d+\-\d+\_\w+).+(IMG.*)',r'_\2',basename,re.IGNORECASE).strip('_')
+            basename = re.sub(r'(.*)(IMG.*)',r'_\2',basename,re.IGNORECASE).strip('_')
+            print("city: %s date: %s basename %s"%(city,date,basename))
+            if city != '':
+                new_filename = date + "_" + city + '_'+ basename
             else:
-                if city != '':
-                    new_filename = date + "_" + city + '_'+ basename
-                else:
-                    new_filename = date + "_" + basename
+                new_filename = date + "_" + basename
                         
             os.rename(path,new_path + '/' + new_filename)
             print('file: ' + str(number) + ' old name: ' + path + ' New name: ' + new_path + '/' + new_filename)    
@@ -192,6 +190,6 @@ if __name__ == "__main__":
     parser.add_argument("-d", "--delete_duplicated", action='store_true', help='if remote duplicated pictures')
     parser.add_argument("-c", "--create_folder", action='store_true', help='if create folder city_yyyy and move pictures matching to such folders')
     args = parser.parse_args()
-    get_pic_GPS(args.folder)
     global number
     number = 0
+    get_pic_GPS(args.folder)
