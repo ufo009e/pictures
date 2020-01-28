@@ -20,9 +20,9 @@ def get_pic_GPS(pic_dir):
     md5_dict = {}
     imagename = ['PNG', 'JPG', 'JEPG', 'GIF']
     items = os.listdir(pic_dir)
-    i = 0
     for item in items:
-        i += 1
+        global number
+        number += 1
         path = os.path.join(pic_dir, item)
         if os.path.isdir(path):
             get_pic_GPS(path)
@@ -67,7 +67,7 @@ def get_pic_GPS(pic_dir):
                     new_filename = date + "_" + basename
                         
             os.rename(path,new_path + '/' + new_filename)
-            print('file: ' + str(i) + ' old name: ' + path + ' New name: ' + new_path + '/' + new_filename)    
+            print('file: ' + str(number) + ' old name: ' + path + ' New name: ' + new_path + '/' + new_filename)    
 
 def convert_to_decimal(*gps):
     if '/' in gps[0]:
@@ -193,3 +193,5 @@ if __name__ == "__main__":
     parser.add_argument("-c", "--create_folder", action='store_true', help='if create folder city_yyyy and move pictures matching to such folders')
     args = parser.parse_args()
     get_pic_GPS(args.folder)
+    global number
+    number = 0
