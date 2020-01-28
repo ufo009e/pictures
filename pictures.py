@@ -39,7 +39,10 @@ def get_pic_GPS(pic_dir):
                 date,city = imageread(path)
                 #print("city: %s date: %s"%(city,date))
                 if args.create_folder == True:
-                    new_folder = date.split('-')[0]  + '_' + city
+                    if city != '':
+                        new_folder = date.split('-')[0]  + '_' + city
+                    else:
+                        new_folder = date.split('-')[0]
                     if args.folder.endswith('/'):
                         new_path = args.folder + new_folder
                     else:
@@ -50,11 +53,18 @@ def get_pic_GPS(pic_dir):
                 new_path = os.path.dirname(path)
             basename = os.path.basename(path)
             basename = re.sub(r'.*Earth','',basename).strip('_')
+            basename = re.sub(r'\d+\-\d+\-\d+\-','',basename).strip('_')
             match = re.search(r'(\d+\_\d+\_\d+_\d+_\d+_)',basename)
             if match:
-                new_filename = basename.replace(match.group(1),'_'.join(match.group(1).split("_")[:3]) + '_' + city + '_')
+                if city != '':
+                    new_filename = basename.replace(match.group(1),'_'.join(match.group(1).split("_")[:3]) + '_' + city + '_')
+                else:
+                    new_filename = basename.replace(match.group(1),'_'.join(match.group(1).split("_")[:3]) + '_')
             else:
-                new_filename = date + "_" + city + '_'+ basename
+                if city != '':
+                    new_filename = date + "_" + city + '_'+ basename
+                else:
+                    new_filename = date + "_" + basename
                         
             os.rename(path,new_path + '/' + new_filename)
             print('file: ' + str(i) + ' old name: ' + path + ' New name: ' + new_path + '/' + new_filename)    
@@ -94,8 +104,8 @@ def convert_to_decimal(*gps):
 def imageread(path):
     imagename = ['PNG', 'JPG', 'JEPG', 'GIF']
     if not any(path.upper().endswith(i) for i in imagename):
-        return str(datetime.datetime.fromtimestamp(os.path.getmtime(path))).split(' ')[0].replace(':','-'),'Earth'
-    print(path)
+        return str(datetime.datetime.fromtimestamp(os.path.getmtime(path))).split(' ')[0].replace(':','-'),''
+    #print(path)
     f = open(path, 'rb')
     GPS = {}
     Data = ""
@@ -162,11 +172,9 @@ def imageread(path):
         city = convert_gps_to_address(float(GPS['GPSLatitude']), float(GPS['GPSLongitude']))
         #print("city:" + city)
     else:
-        city = 'Earth'
+        city = ''
     if not "DateTime" in GPS.keys():
         GPS["DateTime"] = str(datetime.datetime.fromtimestamp(os.path.getmtime(path)))
-    if city == '':
-        city = 'Earth'
     return GPS["DateTime"].split(' ')[0].replace(':','-'),city
 
 
