@@ -2,7 +2,6 @@ import os
 import exifread
 import re
 import sys
-#import requests
 import json
 from rgeocoder import ReverseGeocoder
 import argparse
@@ -43,10 +42,10 @@ def get_pic_GPS(pic_dir):
                         new_folder = date.split('-')[0]  + '_' + city
                     else:
                         new_folder = date.split('-')[0]
-                    if args.folder.endswith('/'):
+                    if args.folder.endswith(os.sep):
                         new_path = args.folder + new_folder
                     else:
-                        new_path = args.folder + '/' + new_folder
+                        new_path = args.folder + os.sep + new_folder
                     if not os.path.exists(new_path):
                         os.mkdir(new_path)
             else:
@@ -64,8 +63,8 @@ def get_pic_GPS(pic_dir):
             else:
                 new_filename = date + "_" + basename
                         
-            os.rename(path,new_path + '/' + new_filename)
-            print('file: ' + str(number) + ' old name: ' + path + ' New name: ' + new_path + '/' + new_filename)    
+            os.rename(path,new_path + os.sep + new_filename)
+            print('file: ' + str(number) + ' old name: ' + path + ' New name: ' + new_path + os.sep + new_filename)    
 
 def convert_to_decimal(*gps):
     if '/' in gps[0]:
