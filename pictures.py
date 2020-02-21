@@ -186,8 +186,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-f", "--folder", type=str, required=True, help="dirctory contains all of pictures, eg './images/'")
     parser.add_argument("-r", "--remane", action='store_true', help='if reanme the picture like yyyy-mm-dd_city_something.jpg')
-    parser.add_argument("-d", "--delete_duplicated", action='store_true', help='if remote duplicated pictures')
-    parser.add_argument("-c", "--create_folder", action='store_true', help='if create folder city_yyyy and move pictures matching to such folders')
+    parser.add_argument("-d", "--delete_duplicated", action='store_true', help='if delete duplicated pictures')
+    parser.add_argument("-c", "--create_folder", action='store_true', help='if create folder yyyy-mm-dd_city and move pictures matched to such folders')
     args = parser.parse_args()
     global number
     number = 0
