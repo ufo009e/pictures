@@ -19,6 +19,7 @@ def get_pic_GPS(pic_dir):
     md5_dict = {}
     imagename = ['PNG', 'JPG', 'JEPG', 'GIF']
     items = os.listdir(pic_dir)
+    n = 0
     for item in items:
         global number
         number += 1
@@ -58,12 +59,14 @@ def get_pic_GPS(pic_dir):
             #basename = re.sub(r'(\d+\-\d+\-\d+\_\w+).+(IMG.*)',r'_\2',basename,re.IGNORECASE).strip('_')
             basename = re.sub(r'(.*)(IMG.*)',r'_\2',basename,re.IGNORECASE).strip('_')
             print("city: %s date: %s basename %s"%(city,date,basename))
+            if not '.' in basename:
+            	basename = basename.upper().replace('MOV', '.MOV').replace("JPG", ".JPG").replace("JPEG", ".JPEG").replace('GIF', '.GIF').replace('MP4','.MP4').replace('AAE', '.AAE').replace('PNG', '.PNG')
             if city != '':
-                new_filename = date + "_" + city + '_'+ basename
+                new_filename = date + "_" + city + '_'+ str(number) + '.' + basename.split('.')[-1]
             else:
-                new_filename = date + "_" + basename
+                new_filename = date + "_" + str(number) + '.' + basename.split('.')[-1]
                         
-            os.rename(path,new_path + os.sep + new_filename)
+            os.rename(path,new_path + os.sep + new_filename.upper())
             print('file: ' + str(number) + ' old name: ' + path + ' New name: ' + new_path + os.sep + new_filename)    
 
 def convert_to_decimal(*gps):
